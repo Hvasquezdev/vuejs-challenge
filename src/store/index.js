@@ -36,6 +36,13 @@ export default new Vuex.Store({
         description: ''
       });
     },
+    CREATE_COLUMN(state, { name }) {
+      state.board.columns.push({
+        name,
+        id: uuid(),
+        tasks: []
+      });
+    },
     UPDATE_TASK(state, { columnId, taskId, value }) {
       const column = state.board.columns.find(col => col.id === columnId);
       const columnIndex = state.board.columns.indexOf(column);
@@ -43,6 +50,10 @@ export default new Vuex.Store({
       const taskIndex = column.tasks.indexOf(task);
 
       state.board.columns[columnIndex].tasks[taskIndex] = value;
+    },
+    UPDATE_COLUMN_NAME(state, { column, name }) {
+      const columnIndex = state.board.columns.indexOf(column);
+      state.board.columns[columnIndex].name = name;
     },
     MOVE_TASK(state, { from, to, taskIndex, toTaskIndex }) {
       const columns = [...state.board.columns];

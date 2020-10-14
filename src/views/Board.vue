@@ -26,6 +26,16 @@
           @click="openTaskModal(task, column)"
         />
       </board-column>
+
+      <div class="column flex">
+        <input
+          type="text"
+          class="p-2 flex-grow rounded outline-none text-gray-500"
+          placeholder="New column name"
+          v-model.trim="newColumnName"
+          @keyup.enter="createColumn"
+        />
+      </div>
     </div>
 
     <div v-if="isTaskOpen" class="task-modal" @click.self="closeTaskModal">
@@ -45,6 +55,12 @@ export default {
   components: {
     BoardColumn,
     BoardColumnTask
+  },
+
+  data() {
+    return {
+      newColumnName: null
+    };
   },
 
   computed: {
@@ -70,6 +86,15 @@ export default {
       this.$router.push({
         name: 'Board'
       });
+    },
+    createColumn() {
+      if (!this.newColumnName) return;
+
+      this.$store.commit('CREATE_COLUMN', {
+        name: this.newColumnName
+      });
+
+      this.newColumnName = null;
     },
     pickupTask(e, taskId, columnId) {
       const column = this.board.columns.find(column => column.id === columnId);

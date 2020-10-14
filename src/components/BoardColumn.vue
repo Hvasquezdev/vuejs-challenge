@@ -1,8 +1,12 @@
 <template>
   <div class="column" v-on="$listeners">
-    <h2 class="column-title">
-      {{ column.name }}
-    </h2>
+    <input
+      type="text"
+      class="block p-2 bg-transparent outline-none font-bold cursor-pointer"
+      placeholder="Column name"
+      v-model.trim="columnName"
+      @keyup.enter="updateColumnName"
+    />
 
     <section class="task-list">
       <slot />
@@ -35,11 +39,24 @@ export default {
 
   data() {
     return {
-      taskName: null
+      taskName: null,
+      columnName: null
     };
   },
 
+  beforeMount() {
+    this.columnName = this.column.name;
+  },
+
   methods: {
+    updateColumnName(e) {
+      this.$store.commit('UPDATE_COLUMN_NAME', {
+        name: this.columnName,
+        column: this.column
+      });
+
+      e.target.blur();
+    },
     createTask() {
       this.$store.commit('CREATE_TASK', {
         columnId: this.column.id,
