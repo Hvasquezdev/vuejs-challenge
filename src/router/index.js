@@ -10,7 +10,7 @@ const routes = [
     component: () => import('@/views/Board.vue'),
     children: [
       {
-        path: 'task/:id',
+        path: 'task/:columnId/:taskId',
         name: 'Task',
         component: () => import('@/views/Task.vue')
       }

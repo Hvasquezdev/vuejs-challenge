@@ -13,12 +13,12 @@
           :task="task"
           :column="column"
           :board="board"
-          @click="openTaskModal(task)"
+          @click="openTaskModal(task, column)"
         />
       </board-column>
     </div>
 
-    <div v-if="isTaskOpen" class="task-modal" @click="closeTaskModal">
+    <div v-if="isTaskOpen" class="task-modal" @click.self="closeTaskModal">
       <router-view />
     </div>
   </div>
@@ -47,11 +47,12 @@ export default {
   },
 
   methods: {
-    openTaskModal(task) {
+    openTaskModal(task, column) {
       this.$router.push({
         name: 'Task',
         params: {
-          id: task.id
+          taskId: task.id,
+          columnId: column.id
         }
       });
     },

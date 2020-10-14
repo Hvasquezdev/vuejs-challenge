@@ -7,6 +7,14 @@
     <section class="task-list">
       <slot />
     </section>
+
+    <input
+      type="text"
+      class="block p-2 w-full bg-transparent outline-none text-gray-500"
+      placeholder="+ Enter new task"
+      v-model="taskName"
+      @keyup.enter="createTask"
+    />
   </div>
 </template>
 
@@ -22,6 +30,23 @@ export default {
     board: {
       type: Object,
       required: true
+    }
+  },
+
+  data() {
+    return {
+      taskName: null
+    };
+  },
+
+  methods: {
+    createTask() {
+      this.$store.commit('CREATE_TASK', {
+        columnId: this.column.id,
+        name: this.taskName
+      });
+
+      this.taskName = null;
     }
   }
 };
