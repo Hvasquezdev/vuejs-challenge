@@ -5,6 +5,7 @@ export default {
   columns: [
     {
       name: 'Todo',
+      id: uuid(),
       tasks: [
         {
           description: '',
