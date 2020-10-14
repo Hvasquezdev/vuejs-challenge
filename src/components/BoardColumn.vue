@@ -50,9 +50,9 @@
       px="2"
       bg-color="green-300"
       class="mb-2"
-      @click="orderDesc = !orderDesc"
+      @click="orderAsc = !orderAsc"
     >
-      Order {{ orderDesc ? 'desc' : 'asc' }}
+      Order asc
     </base-button>
 
     <section class="task-list">
@@ -97,14 +97,19 @@ export default {
       taskName: null,
       columnName: null,
       confirmDeleteColumn: false,
-      orderDesc: false
+      orderAsc: false
     };
   },
 
   computed: {
     sortedTasks() {
       const tasks = [...this.column.tasks];
-      return tasks.sort(this.compareTasks);
+
+      if (this.orderAsc === true) {
+        return tasks.sort(this.compareTasks);
+      }
+
+      return this.column.tasks;
     }
   },
 
@@ -117,11 +122,7 @@ export default {
       const aName = a.name.split('')[0].toUpperCase();
       const bName = b.name.split('')[0].toUpperCase();
 
-      if (this.orderDesc) {
-        return aName > bName ? 1 : -1;
-      }
-
-      return aName < bName ? 1 : -1;
+      return aName > bName ? 1 : -1;
     },
     pickupColumn(e, columnId) {
       const column = this.board.columns.find(column => column.id === columnId);
