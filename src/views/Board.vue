@@ -7,14 +7,16 @@
         :column="column"
         :board="board"
       >
-        <board-column-task
-          v-for="task in column.tasks"
-          :key="task.id"
-          :task="task"
-          :column="column"
-          :board="board"
-          @click="openTaskModal(task, column)"
-        />
+        <template v-slot="{ tasks }">
+          <board-column-task
+            v-for="task in tasks"
+            :key="task.id"
+            :task="task"
+            :column="column"
+            :board="board"
+            @click="openTaskModal(task, column)"
+          />
+        </template>
       </board-column>
 
       <div class="column flex">

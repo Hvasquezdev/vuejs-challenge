@@ -45,8 +45,19 @@
       </base-button>
     </div>
 
+    <base-button
+      rounded
+      py="1"
+      px="2"
+      bg-color="green-300"
+      class="mb-2"
+      @click="orderDesc = !orderDesc"
+    >
+      Order {{ orderDesc ? 'desc' : 'asc' }}
+    </base-button>
+
     <section class="task-list">
-      <slot />
+      <slot v-bind:tasks="sortedTasks" />
     </section>
 
     <input
@@ -83,8 +94,16 @@ export default {
     return {
       taskName: null,
       columnName: null,
-      confirmDeleteColumn: false
+      confirmDeleteColumn: false,
+      orderDesc: false
     };
+  },
+
+  computed: {
+    sortedTasks() {
+      const tasks = [...this.column.tasks];
+      return tasks.sort(this.compareTasks);
+    }
   },
 
   beforeMount() {
@@ -92,6 +111,16 @@ export default {
   },
 
   methods: {
+    compareTasks(a, b) {
+      const aName = a.name.split('')[0].toUpperCase();
+      const bName = b.name.split('')[0].toUpperCase();
+
+      if (this.orderDesc) {
+        return aName > bName ? 1 : -1;
+      }
+
+      return aName < bName ? 1 : -1;
+    },
     pickupColumn(e, columnId) {
       const column = this.board.columns.find(column => column.id === columnId);
       const columnIndex = this.board.columns.indexOf(column);
