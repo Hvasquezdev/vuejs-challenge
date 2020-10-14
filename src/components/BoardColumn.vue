@@ -1,5 +1,5 @@
 <template>
-  <div class="column">
+  <div class="column" v-on="$listeners">
     <h2 class="column-title">
       {{ column.name }}
     </h2>

@@ -20,6 +20,24 @@ export default {
           userAssigned: null
         }
       ]
+    },
+    {
+      name: 'Review',
+      id: uuid(),
+      tasks: [
+        {
+          description: '',
+          id: uuid(),
+          name: 'First task',
+          userAssigned: null
+        },
+        {
+          description: '',
+          id: uuid(),
+          name: 'Second task',
+          userAssigned: null
+        }
+      ]
     }
   ]
 };
