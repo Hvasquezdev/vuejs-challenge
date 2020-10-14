@@ -44,14 +44,17 @@ export default new Vuex.Store({
 
       state.board.columns[columnIndex].tasks[taskIndex] = value;
     },
-    MOVE_TASK(state, { from, to, taskIndex }) {
+    MOVE_TASK(state, { from, to, taskIndex, toTaskIndex }) {
       const columns = [...state.board.columns];
 
       const fromColumn = { ...columns[from] };
       const toColumn = { ...columns[to] };
 
       const taskToMove = fromColumn.tasks.splice(taskIndex, 1)[0];
-      toColumn.tasks.push(taskToMove);
+      const spliceIndex =
+        toTaskIndex >= 0 ? toTaskIndex : toColumn.tasks.length;
+
+      toColumn.tasks.splice(spliceIndex, 0, taskToMove);
     },
     MOVE_COLUMN(state, { fromIndex, toIndex }) {
       const columnList = state.board.columns;

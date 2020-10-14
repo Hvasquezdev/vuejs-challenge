@@ -19,7 +19,10 @@
           :column="column"
           :board="board"
           draggable
+          @drop.stop="moveTaskOrColumn($event, column, task)"
           @dragstart="pickupTask($event, task.id, column.id)"
+          @dragover.prevent=""
+          @dragenter.prevent=""
           @click="openTaskModal(task, column)"
         />
       </board-column>
@@ -91,29 +94,33 @@ export default {
       e.dataTransfer.setData('from-column-index', columnIndex);
       e.dataTransfer.setData('type', 'column');
     },
-    moveTaskOrColumn(e, to) {
+    moveTaskOrColumn(e, toColumn, toTask = null) {
       const type = e.dataTransfer.getData('type');
 
       switch (type) {
         case 'task':
-          this.moveTask(e, to);
+          this.moveTask(e, toColumn, toTask);
           break;
 
         default:
-          this.moveColumn(e, to);
+          this.moveColumn(e, toColumn);
           break;
       }
     },
-    moveTask(e, to) {
+    moveTask(e, toColumn, toTask) {
       const fromIndex = e.dataTransfer.getData('from-column-index');
       const taskIndex = e.dataTransfer.getData('task-index');
-      const toColumn = this.board.columns.find(column => column.id === to.id);
-      const toColumnIndex = this.board.columns.indexOf(toColumn);
+      const column = this.board.columns.find(
+        column => column.id === toColumn.id
+      );
+      const toColumnIndex = this.board.columns.indexOf(column);
+      const toTaskIndex = column.tasks.indexOf(toTask);
 
       this.$store.commit('MOVE_TASK', {
         from: fromIndex,
         to: toColumnIndex,
-        taskIndex
+        taskIndex,
+        toTaskIndex
       });
     },
     moveColumn(e, to) {
