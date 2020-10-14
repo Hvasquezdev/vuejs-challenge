@@ -13,8 +13,13 @@
           :task="task"
           :column="column"
           :board="board"
+          @click="openTaskModal(task)"
         />
       </board-column>
+    </div>
+
+    <div v-if="isTaskOpen" class="task-modal" @click="closeTaskModal">
+      <router-view />
     </div>
   </div>
 </template>
@@ -35,7 +40,26 @@ export default {
   computed: {
     ...mapState({
       board: 'board'
-    })
+    }),
+    isTaskOpen() {
+      return this.$route.name === 'Task';
+    }
+  },
+
+  methods: {
+    openTaskModal(task) {
+      this.$router.push({
+        name: 'Task',
+        params: {
+          id: task.id
+        }
+      });
+    },
+    closeTaskModal() {
+      this.$router.push({
+        name: 'Board'
+      });
+    }
   }
 };
 </script>
@@ -46,5 +70,9 @@ export default {
 }
 .board-columns {
   @apply flex flex-row items-start;
+}
+.task-modal {
+  @apply absolute left-0 right-0 top-0 bottom-0 w-full h-full;
+  background: rgba(0, 0, 0, 0.5);
 }
 </style>

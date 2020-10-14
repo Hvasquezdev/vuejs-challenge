@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Board from '@/views/Board.vue';
 
 Vue.use(VueRouter);
 
@@ -8,7 +7,14 @@ const routes = [
   {
     path: '/',
     name: 'Board',
-    component: Board
+    component: () => import('@/views/Board.vue'),
+    children: [
+      {
+        path: 'task/:id',
+        name: 'Task',
+        component: () => import('@/views/Task.vue')
+      }
+    ]
   }
 ];
 
