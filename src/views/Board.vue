@@ -6,11 +6,6 @@
         :key="column.id"
         :column="column"
         :board="board"
-        draggable
-        @drop="moveTaskOrColumn($event, column)"
-        @dragstart.self="pickupColumn($event, column.id)"
-        @dragover.prevent=""
-        @dragenter.prevent=""
       >
         <board-column-task
           v-for="task in column.tasks"
@@ -18,11 +13,6 @@
           :task="task"
           :column="column"
           :board="board"
-          draggable
-          @drop.stop="moveTaskOrColumn($event, column, task)"
-          @dragstart="pickupTask($event, task.id, column.id)"
-          @dragover.prevent=""
-          @dragenter.prevent=""
           @click="openTaskModal(task, column)"
         />
       </board-column>
@@ -95,67 +85,6 @@ export default {
       });
 
       this.newColumnName = null;
-    },
-    pickupTask(e, taskId, columnId) {
-      const column = this.board.columns.find(column => column.id === columnId);
-      const columnIndex = this.board.columns.indexOf(column);
-      const task = column.tasks.find(task => task.id === taskId);
-      const taskIndex = column.tasks.indexOf(task);
-
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.dropEffect = 'move';
-
-      e.dataTransfer.setData('task-index', taskIndex);
-      e.dataTransfer.setData('from-column-index', columnIndex);
-      e.dataTransfer.setData('type', 'task');
-    },
-    pickupColumn(e, columnId) {
-      const column = this.board.columns.find(column => column.id === columnId);
-      const columnIndex = this.board.columns.indexOf(column);
-
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.dropEffect = 'move';
-
-      e.dataTransfer.setData('from-column-index', columnIndex);
-      e.dataTransfer.setData('type', 'column');
-    },
-    moveTaskOrColumn(e, toColumn, toTask = null) {
-      const type = e.dataTransfer.getData('type');
-
-      switch (type) {
-        case 'task':
-          this.moveTask(e, toColumn, toTask);
-          break;
-
-        default:
-          this.moveColumn(e, toColumn);
-          break;
-      }
-    },
-    moveTask(e, toColumn, toTask) {
-      const fromIndex = e.dataTransfer.getData('from-column-index');
-      const taskIndex = e.dataTransfer.getData('task-index');
-      const column = this.board.columns.find(
-        column => column.id === toColumn.id
-      );
-      const toColumnIndex = this.board.columns.indexOf(column);
-      const toTaskIndex = column.tasks.indexOf(toTask);
-
-      this.$store.commit('MOVE_TASK', {
-        from: fromIndex,
-        to: toColumnIndex,
-        taskIndex,
-        toTaskIndex
-      });
-    },
-    moveColumn(e, to) {
-      const fromIndex = e.dataTransfer.getData('from-column-index');
-      const toIndex = this.board.columns.indexOf(to);
-
-      this.$store.commit('MOVE_COLUMN', {
-        fromIndex,
-        toIndex
-      });
     }
   }
 };

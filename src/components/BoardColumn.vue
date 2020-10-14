@@ -1,5 +1,13 @@
 <template>
-  <div class="column" v-on="$listeners">
+  <div
+    class="column"
+    v-on="$listeners"
+    draggable
+    @drop="moveTaskOrColumn($event, column)"
+    @dragstart.self="pickupColumn($event, column.id)"
+    @dragover.prevent=""
+    @dragenter.prevent=""
+  >
     <input
       type="text"
       class="block p-2 bg-transparent outline-none font-bold cursor-pointer"
@@ -23,15 +31,15 @@
 </template>
 
 <script>
+import movingTasksAndColumns from '@/mixins/movingTasksAndColumns';
+
 export default {
   name: 'BoardColumn',
 
+  mixins: [movingTasksAndColumns],
+
   props: {
     column: {
-      type: Object,
-      required: true
-    },
-    board: {
       type: Object,
       required: true
     }
@@ -49,6 +57,16 @@ export default {
   },
 
   methods: {
+    pickupColumn(e, columnId) {
+      const column = this.board.columns.find(column => column.id === columnId);
+      const columnIndex = this.board.columns.indexOf(column);
+
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.dropEffect = 'move';
+
+      e.dataTransfer.setData('from-column-index', columnIndex);
+      e.dataTransfer.setData('type', 'column');
+    },
     updateColumnName(e) {
       this.$store.commit('UPDATE_COLUMN_NAME', {
         name: this.columnName,
