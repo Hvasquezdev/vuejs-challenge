@@ -6,7 +6,9 @@
         :key="column.id"
         :column="column"
         :board="board"
-        @drop="moveTask($event, column)"
+        draggable
+        @drop="moveTaskOrColumn($event, column)"
+        @dragstart.self="pickupColumn($event, column.id)"
         @dragover.prevent=""
         @dragenter.prevent=""
       >
@@ -77,6 +79,30 @@ export default {
 
       e.dataTransfer.setData('task-index', taskIndex);
       e.dataTransfer.setData('from-column-index', columnIndex);
+      e.dataTransfer.setData('type', 'task');
+    },
+    pickupColumn(e, columnId) {
+      const column = this.board.columns.find(column => column.id === columnId);
+      const columnIndex = this.board.columns.indexOf(column);
+
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.dropEffect = 'move';
+
+      e.dataTransfer.setData('from-column-index', columnIndex);
+      e.dataTransfer.setData('type', 'column');
+    },
+    moveTaskOrColumn(e, to) {
+      const type = e.dataTransfer.getData('type');
+
+      switch (type) {
+        case 'task':
+          this.moveTask(e, to);
+          break;
+
+        default:
+          this.moveColumn(e, to);
+          break;
+      }
     },
     moveTask(e, to) {
       const fromIndex = e.dataTransfer.getData('from-column-index');
@@ -88,6 +114,15 @@ export default {
         from: fromIndex,
         to: toColumnIndex,
         taskIndex
+      });
+    },
+    moveColumn(e, to) {
+      const fromIndex = e.dataTransfer.getData('from-column-index');
+      const toIndex = this.board.columns.indexOf(to);
+
+      this.$store.commit('MOVE_COLUMN', {
+        fromIndex,
+        toIndex
       });
     }
   }
