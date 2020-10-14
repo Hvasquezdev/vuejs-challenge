@@ -8,13 +8,42 @@
     @dragover.prevent=""
     @dragenter.prevent=""
   >
-    <input
-      type="text"
-      class="block p-2 bg-transparent outline-none font-bold cursor-pointer"
-      placeholder="Column name"
-      v-model.trim="columnName"
-      @keyup.enter="updateColumnName"
-    />
+    <div class="flex items-center">
+      <input
+        type="text"
+        class="block flex-1 p-2 bg-transparent outline-none font-bold cursor-pointer"
+        placeholder="Column name"
+        v-model.trim="columnName"
+        @keyup.enter="updateColumnName"
+      />
+
+      <base-button
+        v-if="!confirmDeleteColumn"
+        class="column-delete"
+        display="flex"
+        bg-color="red-300"
+        px="0"
+        py="0"
+        font-weight="normal"
+        rounded
+        @click="confirmDeleteColumn = true"
+      >
+        x
+      </base-button>
+      <base-button
+        v-else
+        display="flex"
+        class="column-delete"
+        bg-color="red-300"
+        font-weight="normal"
+        px="2"
+        py="0"
+        rounded
+        @click="removeColumn"
+      >
+        Confirm
+      </base-button>
+    </div>
 
     <section class="task-list">
       <slot />
@@ -32,11 +61,16 @@
 
 <script>
 import movingTasksAndColumns from '@/mixins/movingTasksAndColumns';
+import BaseButton from '@/components/BaseButton';
 
 export default {
   name: 'BoardColumn',
 
   mixins: [movingTasksAndColumns],
+
+  components: {
+    BaseButton
+  },
 
   props: {
     column: {
@@ -48,7 +82,8 @@ export default {
   data() {
     return {
       taskName: null,
-      columnName: null
+      columnName: null,
+      confirmDeleteColumn: false
     };
   },
 
@@ -75,6 +110,11 @@ export default {
 
       e.target.blur();
     },
+    removeColumn() {
+      this.$store.commit('REMOVE_COLUMN', {
+        column: this.column
+      });
+    },
     createTask() {
       this.$store.commit('CREATE_TASK', {
         columnId: this.column.id,
@@ -93,5 +133,10 @@ export default {
 }
 .column-title {
   @apply flex items-center mb-2 font-bold;
+}
+.column-delete {
+  @apply flex-shrink-0 cursor-pointer;
+  height: 30px;
+  min-width: 30px;
 }
 </style>

@@ -72,6 +72,15 @@ export default new Vuex.Store({
       const columnToMove = columnList.splice(fromIndex, 1)[0];
 
       columnList.splice(toIndex, 0, columnToMove);
+    },
+    REMOVE_COLUMN(state, { column }) {
+      const columnIndex = state.board.columns.indexOf(column);
+      state.board.columns.splice(columnIndex, 1);
+    },
+    REMOVE_TASK(state, { column, task }) {
+      const columnIndex = state.board.columns.indexOf(column);
+      const taskIndex = column.tasks.indexOf(task);
+      state.board.columns[columnIndex].tasks.splice(taskIndex, 1);
     }
   },
   actions: {},

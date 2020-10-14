@@ -39,7 +39,11 @@ export default {
     },
     alignItems: {
       type: String,
-      default: 'items-center'
+      default: 'center'
+    },
+    justifyContent: {
+      type: String,
+      default: 'center'
     },
     fontWeight: {
       type: String,
@@ -58,6 +62,7 @@ export default {
         [`${this.display}`]: this.display,
         [`font-${this.fontWeight}`]: this.fontWeight,
         [`items-${this.alignItems}`]: this.alignItems,
+        [`justify-${this.justifyContent}`]: this.justifyContent,
         rounded: this.rounded
       };
     }
