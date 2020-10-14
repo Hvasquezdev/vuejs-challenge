@@ -1,14 +1,17 @@
 <template>
   <div class="task-view">
     <div v-if="task" class="task-details">
-      <input
-        type="text"
+      <base-input
+        placeholder="Task name"
+        full-width
+        color="dark-500"
+        flex="grow"
+        rounded
         class="task-details-title"
         :class="{
           'is-editing': isChanged.name,
           'is-success': updatedKey === 'name'
         }"
-        placeholder="Task name"
         v-model.trim="clonedTask.name"
         @keyup.enter="updateTask('name')"
       />
@@ -30,9 +33,14 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import BaseInput from '@/components/BaseInput';
 
 export default {
   name: 'TaskView',
+
+  components: {
+    BaseInput
+  },
 
   data() {
     return {
@@ -90,7 +98,7 @@ export default {
   @apply flex flex-col flex-grow items-start justify-between px-4;
 }
 .task-details-title {
-  @apply w-full p-2 mb-2 text-xl font-bold border-2 border-transparent rounded outline-none;
+  @apply mb-2 text-xl border-2 border-transparent;
   transition: all 0.3s;
 }
 .task-details-description {

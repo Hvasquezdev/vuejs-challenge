@@ -9,10 +9,9 @@
     @dragenter.prevent=""
   >
     <div class="flex items-center">
-      <input
-        type="text"
-        class="block flex-1 p-2 bg-transparent outline-none font-bold cursor-pointer"
+      <base-input
         placeholder="Column name"
+        color="gray-600"
         v-model.trim="columnName"
         @keyup.enter="updateColumnName"
       />
@@ -60,10 +59,11 @@
       <slot v-bind:tasks="sortedTasks" />
     </section>
 
-    <input
-      type="text"
-      class="block p-2 w-full bg-transparent outline-none text-gray-500"
+    <base-input
       placeholder="+ Enter new task"
+      full-width
+      color="gray-500"
+      font-weight="normal"
       v-model="taskName"
       @keyup.enter="createTask"
     />
@@ -73,6 +73,7 @@
 <script>
 import movingTasksAndColumns from '@/mixins/movingTasksAndColumns';
 import BaseButton from '@/components/BaseButton';
+import BaseInput from '@/components/BaseInput';
 
 export default {
   name: 'BoardColumn',
@@ -80,7 +81,8 @@ export default {
   mixins: [movingTasksAndColumns],
 
   components: {
-    BaseButton
+    BaseButton,
+    BaseInput
   },
 
   props: {

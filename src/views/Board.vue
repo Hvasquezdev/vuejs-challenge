@@ -20,10 +20,12 @@
       </board-column>
 
       <div class="column flex">
-        <input
-          type="text"
-          class="p-2 flex-grow rounded outline-none text-gray-500"
+        <base-input
           placeholder="New column name"
+          full-width
+          color="gray-500"
+          flex="grow"
+          font-weight="normal"
           v-model.trim="newColumnName"
           @keyup.enter="createColumn"
         />
@@ -40,13 +42,15 @@
 import { mapState } from 'vuex';
 import BoardColumn from '@/components/BoardColumn';
 import BoardColumnTask from '@/components/BoardColumnTask';
+import BaseInput from '@/components/BaseInput';
 
 export default {
   name: 'Board',
 
   components: {
     BoardColumn,
-    BoardColumnTask
+    BoardColumnTask,
+    BaseInput
   },
 
   data() {
